@@ -1,0 +1,20 @@
+from sqlalchemy import Column,Integer,String,Date
+from db import Base,engine
+
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True)
+    password = Column(String)
+    height = Column(String)
+    
+class User(Base):
+    __tablename__ = "weight_entries"
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True)
+    weight = Column(String)
+    date = Column(Date)
+    
+
+Base.metadata.create_all(bind=engine)
