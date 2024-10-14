@@ -4,7 +4,7 @@ from datetime import date
 class UserCreateSchema(BaseModel):
     username :str
     password:str
-    height:str
+    height:float
     class Config:
         extra = "forbid"
 

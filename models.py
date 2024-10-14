@@ -7,7 +7,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True)
     password = Column(String)
-    height = Column(String)
+    height = Column(Float)
     
 class Weight(Base):
     __tablename__ = "weight_entries"
