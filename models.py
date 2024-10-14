@@ -1,4 +1,4 @@
-from sqlalchemy import Column,Integer,String,Date
+from sqlalchemy import Column,Integer,String,Float,Date
 from db import Base,engine
 
 
@@ -9,12 +9,12 @@ class User(Base):
     password = Column(String)
     height = Column(String)
     
-class User(Base):
+class Weight(Base):
     __tablename__ = "weight_entries"
     id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True)
-    weight = Column(String)
-    date = Column(Date)
+    username = Column(String)
+    weight = Column(Float)
+    datetime = Column(Date)
     
 
 Base.metadata.create_all(bind=engine)
