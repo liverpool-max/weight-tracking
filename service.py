@@ -5,7 +5,7 @@ from exception import UserNotFoundException
 import psycopg2
 from settings import DATABASE_URL
 import bcrypt
-from fastapi import HTTPException
+from fastapi import HTTPException,Query
 from datetime import datetime
 
 
@@ -32,7 +32,7 @@ def create_user_in_db(*,data: UserCreateSchema,db:Session):
     return {"Message":"New user is created"}
 
 
-def create_new_weight(weight:int,date:float,data:WeightCreateSchema,db:Session):
+def create_new_weight(weight:int,data:WeightCreateSchema,db:Session,date:float = Query(description="YYYY-MM-DD")):
     user = db.query(User).filter(User.username==data.username).first()
     if not user:
         raise UserNotFoundException()

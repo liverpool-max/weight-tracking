@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Depends
+from fastapi import FastAPI,Depends,Query
 from db import get_db
 from sqlalchemy.orm import Session
 from schema import *
@@ -18,7 +18,7 @@ def create_user(item : UserCreateSchema, db:Session = Depends(get_db)):
     return message
 
 @app.post("/weight")
-def create_weight(weight:float,date:date,item : WeightCreateSchema, db:Session = Depends(get_db)):
+def create_weight(weight:float,item : WeightCreateSchema, db:Session = Depends(get_db),date:date = Query(description="YYYY-MM-DD")):
     message = create_new_weight(weight=weight,date=date,data=item,db=db)
     return message
 
