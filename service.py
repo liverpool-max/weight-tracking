@@ -29,32 +29,24 @@ def create_user_in_db(*,data: UserCreateSchema,db:Session):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return {"Message":"new user is created"}
+    return {"Message":"New user is created"}
 
 
-def create_weight_in_db(*,username:str, data: WeightCreateSchema, db : Session):
-    new_weight = Weight(username=username,weight=data.weigth,datetime=data.datetime)
-    user=db.query(User).filter(User.username == new_weight.username).first()
+def create_new_weight(weight:int,date:float,data:WeightCreateSchema,db:Session):
+    user = db.query(User).filter(User.username==data.username).first()
     if not user:
-        raise UserNotFoundException
-    lst = []
-    weights = db.query(Weight).filter_by(username=user.username,weight=Weight.weight).all()
-    lst.append(weights)
-    if len(lst[0]) == 0 :
+        raise UserNotFoundException()
+    existing_weight = db.query(Weight).filter(Weight.username == data.username,Weight.datetime == date).first()
+    if existing_weight:
+        existing_weight.weight = weight
+        db.commit()
+        return {"Message": "Weight is updated"}
+    else:
+        new_weight=Weight(username=data.username,weight=weight,datetime=date)
         db.add(new_weight)
         db.commit()
         db.refresh(new_weight)
-    else:
-        last_entry = lst[0][-1]
-    last = last_entry
-    if last.datetime == data.datetime:
-        a=db.query(Weight).filter_by(username = username).update({"weight":new_weight.weight})
-        db.commit()
-        return {"msg":"weight updated"}
-    else:
-        db.add(new_weight)
-        db.commit()
-        db.refresh(new_weight)
+        return {"Message":"New weight is created"}
     
 
 def get_weight_change_from_db(*,username:str, db: Session):

@@ -18,8 +18,8 @@ def create_user(item : UserCreateSchema, db:Session = Depends(get_db)):
     return message
 
 @app.post("/weight")
-def create_weight(username:str,item : WeightCreateSchema, db:Session = Depends(get_db)):
-    message = create_weight_in_db(username=username,data=item,db=db)
+def create_weight(weight:float,date:date,item : WeightCreateSchema, db:Session = Depends(get_db)):
+    message = create_new_weight(weight=weight,date=date,data=item,db=db)
     return message
 
 @app.get("/weight_diff")
