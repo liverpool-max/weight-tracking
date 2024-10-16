@@ -32,17 +32,17 @@ def create_user_in_db(*,data: UserCreateSchema,db:Session):
     return {"Message":"New user is created"}
 
 
-def create_new_weight(weight:int,data:WeightCreateSchema,db:Session,date:float = Query(description="YYYY-MM-DD")):
+def create_new_weight(weight:int,data:WeightCreateSchema,db:Session):
     user = db.query(User).filter(User.username==data.username).first()
     if not user:
         raise UserNotFoundException()
-    existing_weight = db.query(Weight).filter(Weight.username == data.username,Weight.datetime == date).first()
+    existing_weight = db.query(Weight).filter(Weight.username == data.username,Weight.datetime == data.date).first()
     if existing_weight:
         existing_weight.weight = weight
         db.commit()
         return {"Message": "Weight is updated"}
     else:
-        new_weight=Weight(username=data.username,weight=weight,datetime=date)
+        new_weight=Weight(username=data.username,weight=weight,datetime=data.date)
         db.add(new_weight)
         db.commit()
         db.refresh(new_weight)
