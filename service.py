@@ -54,7 +54,7 @@ def get_weight_change_from_db(*,username:str, db: Session):
     if not user:
         raise UserNotFoundException()
     lst = []
-    weights = db.query(Weight).filter_by(username=user.username,weight=Weight.weight).all()
+    weights = db.query(Weight).filter_by(username=user.username,weight=Weight.weight).order_by(Weight.datetime).all()
     lst.append(weights)
     last_entry = lst[0][-1]
     if len(lst[0])!=1:
@@ -62,10 +62,12 @@ def get_weight_change_from_db(*,username:str, db: Session):
     else:
         raise HTTPException(status_code=404,detail="User entered only one weight")
     a = abs(last_entry.weight-first_entry)
-    if a > 0:
+    if last_entry.weight == first_entry:
+        return {f"Message: Your weight has not changed and your weight {last_entry.weight}"}
+    elif last_entry.weight > first_entry:
         return {f"Message: You get fat {a} kg and your weight: {last_entry.weight}"}
-    else:
-        return {f"Message: You lose weight {a} kg and your weight: {last_entry.weight}"}
+    elif last_entry.weight < first_entry:
+        return {f"Message: You lose {a} kg and your weight: {last_entry.weight}"}
 
 
 def calculate_bmi_for_last_weight(*,username:str, db: Session):
@@ -73,7 +75,7 @@ def calculate_bmi_for_last_weight(*,username:str, db: Session):
     if not user:
         raise UserNotFoundException()
     lst = []
-    weights = db.query(Weight).filter_by(username=user.username,weight=Weight.weight).all()
+    weights = db.query(Weight).filter_by(username=user.username,weight=Weight.weight).order_by(Weight.datetime).all()
     lst.append(weights)
     last_entry = lst[0][-1]
     heights= db.query(User).filter_by(username = user.username, height = User.height).first()
@@ -87,3 +89,4 @@ def calculate_bmi_for_last_weight(*,username:str, db: Session):
         return {f"Message: Your BMI: {BMI} and you are overweight"}
     else: 
         return {f"Message: Your BMI: {BMI} and you are obesity"}
+

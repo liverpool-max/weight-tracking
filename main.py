@@ -23,7 +23,7 @@ def create_weight(weight:float,item : WeightCreateSchema, db:Session = Depends(g
     return message
 
 @app.get("/weight_diff")
-def change_weight(username: str, db: Session = Depends(get_db)):
+def different_weight(username: str, db: Session = Depends(get_db)):
     message = get_weight_change_from_db(username = username, db = db)
     return message
 
